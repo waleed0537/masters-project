@@ -1,0 +1,32 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Virtual environment
+venv/
+.env
+
+# Model checkpoints
+ckpts/
+
+# Dataset
+database_path/
+protocols_path/
+
+# Generated outputs
+score_*.txt
+*.log
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Large audio files (optional)
+*.flac
+*.wav

@@ -1,0 +1,34 @@
+RQ Mapping to Literature Review
+
+RQ1: Which audio deepfake detection architectures published since 2020 best balance equal error rate (EER) with the computational footprint required for real-time inference on resource-constrained edge devices?
+
+Sections that address it: IV-B (Generative Speech Synthesis: Evolution and Forensic Footprint), IV-C (Audio Anti-Spoofing Architectures, Table I), V (Discussion, first paragraph)
+
+Key sources: RawNet2 [6], AASIST [7], SE-Rawformer [25], RawTFNet [28]. Generalisation stress tests come from In-the-Wild [29] and Deepfake-Eval-2024 [30]
+
+Finding: Lightweight architectures such as RawTFNet now match or exceed the accuracy of much larger models while using a fraction of the parameters. The unresolved issue is generalisation, since accuracy drops sharply once audio is codec compressed or pulled from real world conditions rather than clean academic datasets.
+
+
+RQ2: How can federated learning, differential privacy, and trusted execution environments be combined to provide end to end privacy guarantees for biometric voice data during on device deepfake detection?
+
+Sections that address it: IV-D (Privacy-Preserving Frameworks for Speech Data), IV-E (Hardware-Anchored Trust: Trusted Execution Environments), IV-F (Telephony-Layer Integration, Figure 1), V (Discussion, second paragraph)
+
+Key sources: McMahan et al. [10], Abadi et al. [16], Pelikan et al. [11], Feng et al. [12], DarkneTZ [13], GradSec [14], Xie et al. [32], TEEp [33]
+
+Finding: Each individual primitive, federated learning, differential privacy, and TrustZone based confidential inference, is mature on its own. No peer reviewed study combines all three specifically for anti spoofing. Figure 1 is presented as a proposed synthesis rather than something already implemented and tested in the literature.
+
+
+RQ3: What open methodological and deployment challenges remain in transferring audio deepfake detection from laboratory benchmarks to the residential telephony edge, particularly for the protection of vulnerable demographics?
+
+Sections that address it: IV-A (Threat Landscape and Vulnerable Demographics), IV-F (Telephony-Layer Integration and Edge Deployment), V (Discussion, third paragraph), VI (Research Gaps and Future Directions)
+
+Key sources: Mai et al. [4], Gohsen et al. [5], Khojir et al. [21], FTC report [19], EPRS report [20], Hu et al. [17], SONAR [23]
+
+Finding: Three gaps stand out. The gap between lab performance and real world performance is widening rather than closing. Very few integrated residential deployments exist in the peer reviewed record. Evaluation protocols rarely break results down by demographic group, even though older adults carry most of the real world cost of failure.
+
+
+Notes
+
+Section III (Positioning Against Prior Reviews) does not map directly to any single RQ. It is there to establish that this review fills a gap the five prior surveys did not cover, so it is more of a supporting argument for why RQ2 in particular has not really been answered elsewhere.
+
+Section VI (Research Gaps) mirrors all three RQs. The integration gap lines up with RQ2, the generalisation gap lines up with RQ1, and the demographic gap lines up with RQ3. Worth pointing out this symmetry directly if it is not already stated somewhere in the paper.

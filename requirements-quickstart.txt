@@ -1,0 +1,12 @@
+# Minimal packages for scripts/score_audio.py, scripts/prepare_audio.py, scripts/clean_onnx.py and the
+# ONNX -> C step (scripts/generate_ta_model.sh). Tested with Python 3.13 and the versions below;
+# newer versions should work. The full, exact environment used on the VM is requirements-pipeline.txt.
+numpy>=2.2
+onnx>=1.22
+onnxruntime>=1.23
+onnxsim>=0.7
+emx-onnx-cgen>=1.4
+librosa>=0.11
+soundfile>=0.13
+# only for scripts/prepare_audio_denoise.py
+noisereduce>=3.0

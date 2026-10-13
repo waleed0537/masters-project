@@ -1,3 +1,9 @@
+> **Note.** This folder is a fork of the official RawTFNet implementation
+> ([paper](https://arxiv.org/abs/2507.08227), MIT licence, Austin Xiao) with the additions made for the
+> MSc project: `predict.py`, `test_audio.py`, `compute_eer.py` and the `export_*.py` scripts that produce
+> the ONNX models. The project itself is described in the [top-level README](../README.md). Run the export
+> scripts from this folder.
+
 # RawTFNet-Pytorch
 Official Pytorch Implementation of RawTFNet, A Lightweight CNN Architecture for Speech Anti-spoofing.
 Please refer  to our paper [![arXiv](https://img.shields.io/badge/arXiv-2504.05657-b31b1b.svg)](https://arxiv.org/pdf/2507.08227)

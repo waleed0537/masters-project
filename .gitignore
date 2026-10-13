@@ -8,8 +8,9 @@ __pycache__/
 venv/
 .env
 
-# Model checkpoints
-ckpts/
+# Model checkpoints (only the trained RawTFNet-16 checkpoint is tracked)
+rawtfnet/ckpts/*
+!rawtfnet/ckpts/Best_RawTFNet_16.pth
 
 # Dataset
 database_path/
@@ -18,6 +19,7 @@ protocols_path/
 # Generated outputs
 score_*.txt
 *.log
+!results/*.log
 
 # IDE
 .vscode/
@@ -30,3 +32,12 @@ Thumbs.db
 # Large audio files (optional)
 *.flac
 *.wav
+
+# Build outputs and local scratch
+*.o
+out/
+build.log
+*.bak
+*.tgz
+__pycache__/
+/build/

@@ -14,16 +14,34 @@ This repository contains everything needed to reproduce the work, from the train
 | **Level 2** | The classifier running **inside an emulated TrustZone secure world** | half a day (first build) | Ubuntu 22.04, 8 GB RAM, 60 GB disk |
 | **Level 3** | Live phone call → 4-second windows → secure world → verdict stream | +1 hour | Level 2, plus a SIP softphone |
 
-> **Honest scope.** There is no physical Raspberry Pi 4 in this work. Everything secure-world runs on the QEMU Armv8-A `virt` platform, which has the same CPU architecture and TrustZone security model but **no hardware root of trust**. That validates the software architecture and isolation, not tamper resistance. See [Limitations](#limitations).
+## Features
+
+- **Confidential inference.** The decision-producing classifier of RawTFNet-16 runs inside an OP-TEE Trusted Application in the ARM TrustZone secure world, isolated from the normal-world operating system.
+- **Verified deployment pipeline.** PyTorch → ONNX → standalone C → Trusted Application, with a numerical check at every stage (an independent Apache TVM cross-check, and a native x86 check of the generated C).
+- **Memory-driven partitioning.** The model is split at its existing frontend/classifier seam so that it fits the roughly 16 MB secure-memory pool (the full model needs 319.5 MB).
+- **Evidence of secure-world execution.** The Trusted Application logs the audio file name and the computed logits from inside the secure world.
+- **Any-audio workflow.** `scripts/prepare_audio.py` resamples and normalises any WAV or FLAC file and passes it to the secure-world classifier.
+- **Live-call detection.** Calls to Asterisk are cut into 4-second windows, each scored in the secure world, producing a verdict stream during the call.
+- **Reproducible in three levels.** Stop at the level your hardware allows (see the table above).
+- **Characterised limitation.** A controlled elimination study of why the ASVspoof-trained detector fails on real recordings (see [Results](#results)).
+
+## Thesis and screencast
+
+- **Thesis (PDF):** [`thesis/Masters_Thesis_Waleed_Asif.pdf`](thesis/Masters_Thesis_Waleed_Asif.pdf)
+- **Screencast (under 10 minutes):** [`screencast/`](screencast/)
+
+---
+
+> **Honest scope.** This project was designed to run on a physical Raspberry Pi 4 edge device, which the author was unable to obtain, so there is no physical device in this work. Everything secure-world runs on the QEMU Armv8-A `virt` platform, which has the same CPU architecture and TrustZone security model but **no hardware root of trust**. That validates the software architecture and isolation, not tamper resistance. See [Limitations](#limitations).
 
 ---
 
 ## Contents
 
-1. [How it works](#how-it-works)
-2. [Results](#results)
-3. [Repository layout](#repository-layout)
-4. [Reading the output correctly](#reading-the-output-correctly)
+1. [Features](#features)
+2. [How it works](#how-it-works)
+3. [Results](#results)
+4. [Repository layout](#repository-layout)
 5. [Level 1: model, C code and native check](#level-1-model-c-code-and-native-check)
 6. [Level 2: the secure world](#level-2-the-secure-world)
 7. [Level 3: live phone calls](#level-3-live-phone-calls)
@@ -107,17 +125,6 @@ Details and raw data: [`results/`](results/README.md).
 ├── requirements-quickstart.txt     minimal Python packages (Level 1)
 └── requirements-pipeline.txt       exact package versions used on the VM
 ```
-
----
-
-## Reading the output correctly
-
-The model returns two logits in the order **`[spoof, bonafide]`**. It was trained with `bonafide = 1`, `spoof = 0`, so:
-
-- `logits[1]` is the **bonafide** logit and is the decision score (also the score used for EER).
-- A clip is **bonafide when `logits[1] > 0`**, and **spoof** otherwise.
-
-> The raw session log in [`results/`](results/live_call_2026-09-24_results.log) was written by an earlier version of the client app that printed the two labels the wrong way round. Verdicts in it are correct; the labels on the two numbers are swapped. The current client app prints them correctly.
 
 ---
 
@@ -379,7 +386,7 @@ The status should turn green. Confirm on the VM: `sudo asterisk -rx "pjsip show 
 
 ## Limitations
 
-- **No physical device and no hardware root of trust.** All results are from the QEMU Armv8-A `virt` platform. This validates the software architecture and isolation model, not device-specific behaviour or hardware-backed attestation.
+- **No physical device and no hardware root of trust.** The intended Raspberry Pi 4 edge device was not available. All results are from the QEMU Armv8-A `virt` platform. This validates the software architecture and isolation model, not device-specific behaviour or hardware-backed attestation.
 - **Only the classifier is confidential.** The frontend runs in the normal world, so an attacker with normal-world root could supply manipulated features. The model weights and the decision computation are what the secure world protects.
 - **Weights are compiled into the TA.** A production system would load them from secure storage so the TA does not need re-signing on each retrain.
 - **The detector does not generalise to real speech** (see [Results](#results)).
